@@ -1,13 +1,218 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ProjectStatus {
+  PLANNING
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  REVIEW
+  DONE
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+model Role {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String?
+
+  users       User[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model User {
+  id          Int      @id @default(autoincrement())
+
+  firstName   String
+  lastName    String
+
+  email       String   @unique
+  password    String
+
+  roleId      Int
+  role        Role @relation(fields: [roleId], references: [id])
+
+  managedProjects Project[] @relation("ProjectManager")
+
+  memberProjects ProjectMember[]
+
+  assignedTasks Task[] @relation("AssignedTasks")
+
+  comments TaskComment[]
+
+  notifications Notification[]
+
+  activityLogs ActivityLog[]
+
+  refreshTokens RefreshToken[]
+
+  isActive Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Project {
+
+  id Int @id @default(autoincrement())
+
+  title String
+
+  description String?
+
+  status ProjectStatus @default(PLANNING)
+
+  startDate DateTime?
+
+  endDate DateTime?
+
+  managerId Int
+
+  manager User @relation("ProjectManager", fields:[managerId], references:[id])
+
+  members ProjectMember[]
+
+  tasks Task[]
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+}
+
+model ProjectMember {
+
+  id Int @id @default(autoincrement())
+
+  projectId Int
+
+  userId Int
+
+  project Project @relation(fields:[projectId], references:[id])
+
+  user User @relation(fields:[userId], references:[id])
+
+  joinedAt DateTime @default(now())
+
+  @@unique([projectId,userId])
+
+}
+
+model Task {
+
+  id Int @id @default(autoincrement())
+
+  title String
+
+  description String?
+
+  status TaskStatus @default(TODO)
+
+  priority Priority @default(MEDIUM)
+
+  dueDate DateTime?
+
+  projectId Int
+
+  assignedTo Int
+
+  project Project @relation(fields:[projectId], references:[id])
+
+  assignee User @relation("AssignedTasks", fields:[assignedTo], references:[id])
+
+  comments TaskComment[]
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+}
+
+model TaskComment {
+
+  id Int @id @default(autoincrement())
+
+  message String
+
+  taskId Int
+
+  userId Int
+
+  task Task @relation(fields:[taskId], references:[id])
+
+  user User @relation(fields:[userId], references:[id])
+
+  createdAt DateTime @default(now())
+
+}
+
+model Notification {
+
+  id Int @id @default(autoincrement())
+
+  title String
+
+  message String
+
+  isRead Boolean @default(false)
+
+  userId Int
+
+  user User @relation(fields:[userId], references:[id])
+
+  createdAt DateTime @default(now())
+
+}
+
+model ActivityLog {
+
+  id Int @id @default(autoincrement())
+
+  action String
+
+  entity String
+
+  entityId Int?
+
+  userId Int
+
+  user User @relation(fields:[userId], references:[id])
+
+  createdAt DateTime @default(now())
+
+}
+
+model RefreshToken {
+
+  id Int @id @default(autoincrement())
+
+  token String @unique
+
+  expiresAt DateTime
+
+  userId Int
+
+  user User @relation(fields:[userId], references:[id])
+
+  createdAt DateTime @default(now())
+
 }
