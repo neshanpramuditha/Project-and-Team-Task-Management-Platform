@@ -2,7 +2,9 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-export default {
-    PORT: process.env.PORT,
-    JWT_SECRET: process.env.JWT_SECRET
+const env = {
+  PORT: process.env.PORT || 5000,
+  JWT_SECRET: process.env.JWT_SECRET,
 };
+
+export default env;
