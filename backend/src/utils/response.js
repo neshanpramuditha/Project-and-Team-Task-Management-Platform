@@ -1,10 +1,9 @@
 export const successResponse = (
   res,
-  data = null,
-  message = "Success",
-  status = 200
+  data,
+  message = "Success"
 ) => {
-  return res.status(status).json({
+  return res.status(200).json({
     success: true,
     message,
     data,
