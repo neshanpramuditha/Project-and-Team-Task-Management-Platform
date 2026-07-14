@@ -12,6 +12,9 @@ import taskRoutes from "./routes/task.routes.js";
 import prisma from "./config/prisma.js";
 import commentRoutes from "./routes/comment.routes.js";
 import notificationRoutes from "./routes/notification.routes.js";
+import activityRoutes from "./routes/activity.routes.js";
+import dashboardRoutes from "./routes/dashboard.routes.js";
+
 
 const app = express();
 
@@ -59,4 +62,7 @@ app.use("/api/projects", projectRoutes);
 app.use("/api/tasks", taskRoutes);
 app.use("/api", commentRoutes);
 app.use("/api", notificationRoutes);
+app.use("/api", activityRoutes);
+app.use("/api", dashboardRoutes);
+
 export default app;
