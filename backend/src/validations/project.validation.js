@@ -1,35 +1,53 @@
 import { z } from "zod";
 
-export const createProjectSchema = z.object({
+const dateField = z.preprocess(
+  (value) => {
+    if (value === "" || value === undefined) {
+      return null;
+    }
+    return value;
+  },
+  z.string().nullable().optional()
+);
+
+const baseProjectSchema = z.object({
   code: z
     .string()
-    .min(3, "Project code is required")
-    .max(20),
+    .trim()
+    .min(3, "Project code must be at least 3 characters")
+    .max(20, "Project code cannot exceed 20 characters"),
 
   title: z
     .string()
-    .min(3, "Project title is required")
-    .max(100),
+    .trim()
+    .min(3, "Project title must be at least 3 characters")
+    .max(100, "Project title cannot exceed 100 characters"),
 
   description: z
     .string()
-    .max(500)
+    .trim()
+    .max(500, "Description cannot exceed 500 characters")
     .optional(),
 
-  managerId: z
-    .number({
-      required_error: "Manager is required",
-    }),
+  status: z.enum(
+    ["PLANNING", "ACTIVE", "COMPLETED", "CANCELLED"],
+    {
+      errorMap: () => ({
+        message: "Invalid project status",
+      }),
+    }
+  ),
 
-  startDate: z
-    .string()
-    .optional(),
+  managerId: z.number({
+    required_error: "Manager is required",
+    invalid_type_error: "Manager ID must be a number",
+  }),
 
-  endDate: z
-    .string()
-    .optional()
+  startDate: dateField,
+
+  endDate: dateField,
 });
 
-export const updateProjectSchema = createProjectSchema.partial();
+export const createProjectSchema = baseProjectSchema;
 
-
+export const updateProjectSchema = baseProjectSchema.partial();
