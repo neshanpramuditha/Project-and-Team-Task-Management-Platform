@@ -3,13 +3,14 @@ import { comparePassword } from "../utils/hash.js";
 import { generateToken } from "../utils/jwt.js";
 
 export const login = async (email, password) => {
+
   const user = await prisma.user.findUnique({
     where: {
-      email,
+      email
     },
     include: {
-      role: true,
-    },
+      role: true
+    }
   });
 
   if (!user) {
@@ -31,6 +32,7 @@ export const login = async (email, password) => {
 
   return {
     token,
-    user,
+    user
   };
+
 };

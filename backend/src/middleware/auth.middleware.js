@@ -1,45 +1,60 @@
-import { verifyToken } from "../utils/jwt.js";
+import jwt from "jsonwebtoken";
 import prisma from "../config/prisma.js";
 
 export const authenticate = async (req, res, next) => {
+
   try {
+
     const authHeader = req.headers.authorization;
 
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
+
       return res.status(401).json({
         success: false,
-        message: "Access token required",
+        message: "Access token is missing.",
       });
+
     }
 
     const token = authHeader.split(" ")[1];
 
-    const payload = verifyToken(token);
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_SECRET
+    );
 
     const user = await prisma.user.findUnique({
-      where: { id: payload.id },
+
+      where: {
+        id: decoded.id,
+      },
+
       include: {
         role: true,
       },
+
     });
 
     if (!user) {
+
       return res.status(401).json({
         success: false,
-        message: "User not found",
+        message: "User not found.",
       });
-    }
 
-    delete user.password;
+    }
 
     req.user = user;
 
     next();
 
   } catch (error) {
+
     return res.status(401).json({
       success: false,
-      message: "Invalid or expired token",
+      message: "Invalid or expired token.",
     });
+
   }
+
 };
