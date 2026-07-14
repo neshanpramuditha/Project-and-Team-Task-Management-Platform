@@ -51,7 +51,7 @@ function Sidebar() {
 
     return (
 
-        <aside className="w-64 bg-slate-900 text-white h-screen shadow-xl">
+        <aside className="sticky top-0 h-screen w-64 bg-slate-900 text-white shadow-xl">
 
             <div className="p-6">
 
