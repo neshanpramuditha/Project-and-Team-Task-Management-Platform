@@ -1,92 +1,116 @@
 import {
-    FaHome,
-    FaProjectDiagram,
-    FaTasks,
-    FaComments,
-    FaBell,
-    FaChartBar,
-    FaUser
+  FaHome,
+  FaProjectDiagram,
+  FaTasks,
+  FaUsers,
+  FaSignOutAlt,
 } from "react-icons/fa";
-import { NavLink } from "react-router-dom";
 
-const menus = [
-  {
-    name: "Dashboard",
-    icon: FaHome,
-    path: "/",
-  },
-  {
-    name: "Projects",
-    icon: FaProjectDiagram,
-    path: "/projects",
-  },
-  {
-    name: "Tasks",
-    icon: FaTasks,
-    path: "/tasks",
-  },
-    {
-  name: "Comments",
-  icon: FaComments,
-  path: "/comments",
-},
-  {
-    name: "Notifications",
-    icon: FaBell,
-    path: "/notifications",
-  },
-  {
-    name: "Activity",
-    icon: FaChartBar,
-    path: "/activity",
-  },
-  {
-    name: "Profile",
-    icon: FaUser,
-    path: "/profile",
-  },
-];
+import { NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth";
 
 function Sidebar() {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
-    return (
+  // Get role name safely
+  const role = user?.role?.name ?? "";
 
-        <aside className="sticky top-0 h-screen w-64 bg-slate-900 text-white shadow-xl">
+  const menus = [
+    {
+      name: "Dashboard",
+      icon: FaHome,
+      path: "/",
+    },
+    {
+      name: "Projects",
+      icon: FaProjectDiagram,
+      path: "/projects",
+    },
+    {
+      name: "Tasks",
+      icon: FaTasks,
+      path: "/tasks",
+    },
+  ];
 
-            <div className="p-6">
+  // Admin only menu
+  if (role === "ADMIN") {
+    menus.push({
+      name: "Users",
+      icon: FaUsers,
+      path: "/users",
+    });
+  }
 
-                <h1 className="text-2xl font-bold text-blue-500">
+  function handleLogout() {
+    logout();
+    navigate("/login");
+  }
 
-                  TaskFlow
+  return (
+    <aside className="sticky top-0 flex h-screen w-64 flex-col bg-slate-900 text-white shadow-xl">
 
-                </h1>
+      {/* Logo */}
+      <div className="border-b border-slate-800 p-6">
 
-            </div>
-            
-            <nav>
-              {menus.map((item) => (
-                  <NavLink
-                    key={item.name}
-                    to={item.path}
-                    className={({ isActive }) =>
-                      `mx-3 mb-2 flex items-center gap-4 rounded-lg px-4 py-3 transition-all duration-200 ${
-                        isActive
-                          ? "bg-blue-600 text-white"
-                          : "hover:bg-slate-800"
-                      }`
-                    }
-                  >
-                    <item.icon />
+        <h1 className="text-2xl font-bold text-blue-500">
+          TaskFlow
+        </h1>
 
-                    <span>{item.name}</span>
-                  </NavLink>
-                ))}
-            </nav>
+        {user && (
+          <div className="mt-4">
 
-        </aside>
+            <p className="font-semibold">
+              {user.firstName} {user.lastName}
+            </p>
 
-    );
+            <p className="text-sm text-slate-400">
+              {role.replace(/_/g, " ")}
+            </p>
 
+          </div>
+        )}
+
+      </div>
+
+      {/* Navigation */}
+      <nav className="mt-4 flex-1">
+
+        {menus.map((item) => (
+          <NavLink
+            key={item.name}
+            to={item.path}
+            className={({ isActive }) =>
+              `mx-3 mb-2 flex items-center gap-4 rounded-lg px-4 py-3 transition-all duration-200 ${
+                isActive
+                  ? "bg-blue-600 text-white"
+                  : "hover:bg-slate-800"
+              }`
+            }
+          >
+            <item.icon size={18} />
+            <span>{item.name}</span>
+          </NavLink>
+        ))}
+
+      </nav>
+
+      {/* Logout */}
+      <div className="border-t border-slate-800 p-4">
+
+        <button
+          onClick={handleLogout}
+          className="flex w-full items-center gap-3 rounded-lg px-4 py-3 text-red-400 transition-all duration-200 hover:bg-red-600 hover:text-white"
+        >
+          <FaSignOutAlt size={18} />
+          <span>Logout</span>
+        </button>
+
+      </div>
+
+    </aside>
+  );
 }
 
 export default Sidebar;

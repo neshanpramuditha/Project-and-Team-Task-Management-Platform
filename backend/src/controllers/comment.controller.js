@@ -24,6 +24,7 @@ export const createComment = async (req, res) => {
   try {
     const comment = await commentService.createComment(
       req.params.taskId,
+      req.user.id,
       req.body
     );
 

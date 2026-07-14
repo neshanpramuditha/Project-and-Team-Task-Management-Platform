@@ -36,7 +36,6 @@ export const getUserById = async (id) => {
 
 // Create new user
 export const createUser = async (data) => {
-  // Check duplicate email
   const existingUser = await prisma.user.findUnique({
     where: {
       email: data.email,
@@ -47,6 +46,16 @@ export const createUser = async (data) => {
     throw new Error("Email already exists");
   }
 
+  const role = await prisma.role.findUnique({
+    where: {
+      name: data.role,
+    },
+  });
+
+  if (!role) {
+    throw new Error("Invalid role");
+  }
+
   const hashedPassword = await bcrypt.hash(data.password, 10);
 
   const user = await prisma.user.create({
@@ -55,7 +64,7 @@ export const createUser = async (data) => {
       lastName: data.lastName,
       email: data.email,
       password: hashedPassword,
-      roleId: Number(data.roleId),
+      roleId: role.id,
     },
     include: {
       role: true,
@@ -63,6 +72,7 @@ export const createUser = async (data) => {
   });
 
   const { password, ...userWithoutPassword } = user;
+
   return userWithoutPassword;
 };
 
@@ -83,9 +93,20 @@ export const updateUser = async (id, data) => {
     data.password = await bcrypt.hash(data.password, 10);
   }
 
-  if (data.roleId) {
-    data.roleId = Number(data.roleId);
+  if (data.role) {
+  const role = await prisma.role.findUnique({
+    where: {
+      name: data.role,
+    },
+  });
+
+  if (!role) {
+    throw new Error("Invalid role");
   }
+
+  data.roleId = role.id;
+  delete data.role;
+}
 
   const user = await prisma.user.update({
     where: {

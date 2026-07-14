@@ -10,6 +10,8 @@ import Activity from "../pages/Activity";
 import Profile from "../pages/Profile";
 import Login from "../pages/Login";
 import NotFound from "../pages/NotFound";
+import Users from "../pages/Users";
+
 
 function AppRoutes() {
   return (
@@ -59,7 +61,10 @@ function AppRoutes() {
               element={<Profile />}
             />
 
+            <Route path="/users" element={<Users />} />
+
           </Route>
+          
 
         </Route>
 

@@ -29,8 +29,12 @@ export const getCommentsByTask = async (taskId) => {
 /**
  * Create a new comment
  */
-export const createComment = async (taskId, data) => {
-  // Check task exists
+export const createComment = async (
+  taskId,
+  userId,
+  data
+) => {
+
   const task = await prisma.task.findUnique({
     where: {
       id: Number(taskId),
@@ -41,10 +45,9 @@ export const createComment = async (taskId, data) => {
     throw new Error("Task not found");
   }
 
-  // Check user exists
   const user = await prisma.user.findUnique({
     where: {
-      id: Number(data.userId),
+      id: Number(userId),
     },
   });
 
@@ -56,7 +59,7 @@ export const createComment = async (taskId, data) => {
     data: {
       message: data.message,
       taskId: Number(taskId),
-      userId: Number(data.userId),
+      userId: Number(userId),
     },
 
     include: {

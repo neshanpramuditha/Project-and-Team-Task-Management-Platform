@@ -6,21 +6,45 @@ import {
   deleteComment,
 } from "../controllers/comment.controller.js";
 
+import { authenticate } from "../middleware/auth.middleware.js";
+
 const router = express.Router();
 
-// Get comments of a task
+/*
+|--------------------------------------------------------------------------
+| All comment routes require authentication
+|--------------------------------------------------------------------------
+*/
+router.use(authenticate);
+
+/*
+|--------------------------------------------------------------------------
+| Get all comments for a task
+| GET /api/tasks/:taskId/comments
+|--------------------------------------------------------------------------
+*/
 router.get(
   "/tasks/:taskId/comments",
   getComments
 );
 
-// Add comment to a task
+/*
+|--------------------------------------------------------------------------
+| Create a comment for a task
+| POST /api/tasks/:taskId/comments
+|--------------------------------------------------------------------------
+*/
 router.post(
   "/tasks/:taskId/comments",
   createComment
 );
 
-// Delete comment
+/*
+|--------------------------------------------------------------------------
+| Delete a comment
+| DELETE /api/comments/:id
+|--------------------------------------------------------------------------
+*/
 router.delete(
   "/comments/:id",
   deleteComment

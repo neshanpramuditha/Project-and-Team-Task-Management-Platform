@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { getProjects, getUsers } from "../../services/task.service";
+import CommentSection from "../comment/CommentSection";
 
 function TaskModal({
   isOpen,
@@ -66,7 +67,7 @@ function TaskModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
 
-      <div className="w-full max-w-2xl rounded-2xl bg-white p-8 shadow-xl">
+      <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white p-8 shadow-xl">
 
         <h2 className="mb-6 text-2xl font-bold">
 
@@ -235,6 +236,11 @@ function TaskModal({
           </div>
 
         </form>
+        {initialData && (
+        <CommentSection
+        taskId={initialData.id}
+        />
+        )}
 
       </div>
 
