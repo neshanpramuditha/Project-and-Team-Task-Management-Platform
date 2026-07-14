@@ -21,8 +21,15 @@ function UserModal({
         firstName: initialData.firstName,
         lastName: initialData.lastName,
         email: initialData.email,
+
+        // Always blank when editing
         password: "",
-        role: initialData.role,
+
+        // IMPORTANT
+        role:
+          typeof initialData.role === "string"
+            ? initialData.role
+            : initialData.role?.name || "TEAM_MEMBER",
       });
     } else {
       reset({
@@ -54,6 +61,7 @@ function UserModal({
           <div className="grid grid-cols-2 gap-4">
 
             <div>
+
               <label>First Name</label>
 
               <input
@@ -62,9 +70,11 @@ function UserModal({
                 })}
                 className="mt-2 w-full rounded-lg border p-3"
               />
+
             </div>
 
             <div>
+
               <label>Last Name</label>
 
               <input
@@ -73,11 +83,13 @@ function UserModal({
                 })}
                 className="mt-2 w-full rounded-lg border p-3"
               />
+
             </div>
 
           </div>
 
           <div>
+
             <label>Email</label>
 
             <input
@@ -87,29 +99,44 @@ function UserModal({
               })}
               className="mt-2 w-full rounded-lg border p-3"
             />
+
           </div>
 
-          {!initialData && (
-            <div>
-              <label>Password</label>
-
-              <input
-                type="password"
-                {...register("password", {
-                  required: true,
-                })}
-                className="mt-2 w-full rounded-lg border p-3"
-              />
-            </div>
-          )}
+          {/* Password */}
 
           <div>
+
+            <label>
+              Password
+              {initialData && (
+                <span className="ml-2 text-xs text-gray-500">
+                  (Leave blank to keep current password)
+                </span>
+              )}
+            </label>
+
+            <input
+              type="password"
+              {...register("password")}
+              className="mt-2 w-full rounded-lg border p-3"
+              placeholder={
+                initialData
+                  ? "Leave blank"
+                  : "Enter password"
+              }
+            />
+
+          </div>
+
+          <div>
+
             <label>Role</label>
 
             <select
               {...register("role")}
               className="mt-2 w-full rounded-lg border p-3"
             >
+
               <option value="ADMIN">
                 ADMIN
               </option>
@@ -121,7 +148,9 @@ function UserModal({
               <option value="TEAM_MEMBER">
                 TEAM MEMBER
               </option>
+
             </select>
+
           </div>
 
           <div className="flex justify-end gap-4">
@@ -138,7 +167,9 @@ function UserModal({
               type="submit"
               className="rounded-lg bg-blue-600 px-6 py-3 text-white hover:bg-blue-700"
             >
-              {initialData ? "Update User" : "Create User"}
+              {initialData
+                ? "Update User"
+                : "Create User"}
             </button>
 
           </div>

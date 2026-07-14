@@ -35,7 +35,7 @@ function CommentForm({
       <div className="flex justify-end">
         <button
           type="submit"
-          className="rounded-lg bg-blue-600 px-5 py-2 text-white hover:bg-blue-700"
+          className="rounded-lg bg-blue-600 px-5 py-3 text-white transition-all duration-200 hover:bg-blue-700 hover:shadow-lg"
         >
           Post Comment
         </button>

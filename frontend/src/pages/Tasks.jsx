@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import toast from "react-hot-toast";
 
+import { useAuth } from "../hooks/useAuth";
+
 import KanbanBoard from "../components/task/KanbanBoard";
 import TaskModal from "../components/task/TaskModal";
 import DeleteTaskModal from "../components/task/DeleteTaskModal";
@@ -13,8 +15,13 @@ import {
   deleteTask,
   updateTaskStatus,
 } from "../services/task.service";
+import LoadingSpinner from "../components/common/LoadingSpinner";
 
 function Tasks() {
+  const { user } = useAuth();
+
+  const role = user?.role?.name ?? "";
+
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -98,10 +105,8 @@ function Tasks() {
   }
 
   async function handleTaskMove(taskId, status) {
-    // Save current state for rollback
     const previousTasks = [...tasks];
 
-    // Optimistic UI
     setTasks((current) =>
       current.map((task) =>
         task.id === taskId
@@ -117,7 +122,6 @@ function Tasks() {
     } catch (error) {
       console.error(error);
 
-      // Rollback UI
       setTasks(previousTasks);
 
       toast.error(
@@ -130,7 +134,7 @@ function Tasks() {
   if (loading) {
     return (
       <div className="mt-20 text-center text-lg font-semibold">
-        Loading Tasks...
+        <LoadingSpinner text="Loading..." />
       </div>
     );
   }
@@ -139,27 +143,29 @@ function Tasks() {
     <div className="space-y-6">
 
       <div className="flex items-center justify-between">
-
-        <div>
+        <div className="mb-8">
           <h1 className="text-4xl font-bold">
-            Task Board
+          Task Board
           </h1>
 
           <p className="mt-2 text-gray-500">
-            Manage your team's work
+          Manage your team's work efficiently.
           </p>
+
         </div>
 
-        <button
-          onClick={() => {
-            setSelectedTask(null);
-            setShowModal(true);
-          }}
-          className="flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-3 text-white transition hover:bg-blue-700"
-        >
-          <FaPlus />
-          New Task
-        </button>
+        {role !== "TEAM_MEMBER" && (
+          <button
+            onClick={() => {
+              setSelectedTask(null);
+              setShowModal(true);
+            }}
+            className="flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-3 text-white transition hover:bg-blue-700"
+          >
+            <FaPlus />
+            New Task
+          </button>
+        )}
 
       </div>
 

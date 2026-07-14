@@ -1,4 +1,10 @@
-import { FaEdit, FaTrash, FaCalendarAlt } from "react-icons/fa";
+import {
+  FaEdit,
+  FaTrash,
+  FaCalendarAlt,
+} from "react-icons/fa";
+
+import { useAuth } from "../../hooks/useAuth";
 
 import PriorityBadge from "./PriorityBadge";
 import StatusBadge from "./StatusBadge";
@@ -8,8 +14,12 @@ function TaskCard({
   onEdit,
   onDelete,
 }) {
+  const { user } = useAuth();
+
+  const role = user?.role?.name ?? "";
+
   return (
-    <div className="rounded-2xl bg-white p-5 shadow-sm border border-gray-200 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+    <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
 
       <div className="mb-4 flex items-center justify-between">
 
@@ -20,46 +30,29 @@ function TaskCard({
       </div>
 
       <h3 className="text-lg font-semibold text-slate-800">
-
         {task.title}
-
       </h3>
 
       <p className="mt-2 text-sm text-gray-500">
-
         {task.description}
-
       </p>
 
       <div className="mt-5 space-y-2 text-sm">
 
         <div>
-
           <span className="font-semibold">
-
             Project:
-
-          </span>
-
-          {" "}
-
-          {task.project?.title}
-
+          </span>{" "}
+          {task.project?.title ?? "-"}
         </div>
 
         <div>
-
           <span className="font-semibold">
-
             Assigned:
-
-          </span>
-
-          {" "}
-
-          {task.assignee?.firstName}{" "}
-          {task.assignee?.lastName}
-
+          </span>{" "}
+          {task.assignee
+            ? `${task.assignee.firstName} ${task.assignee.lastName}`
+            : "-"}
         </div>
 
       </div>
@@ -70,39 +63,35 @@ function TaskCard({
 
           <FaCalendarAlt />
 
-          {
-
-            task.dueDate
-
-              ? new Date(task.dueDate).toLocaleDateString()
-
-              : "No Due Date"
-
-          }
+          {task.dueDate
+            ? new Date(task.dueDate).toLocaleDateString()
+            : "No Due Date"}
 
         </div>
 
-        <div className="flex gap-3">
+        {/* Hide Edit/Delete for Team Members */}
 
-          <button
-            onClick={() => onEdit(task)}
-            className="text-blue-600 hover:text-blue-800"
-          >
+        {role !== "TEAM_MEMBER" && (
+          <div className="flex gap-3">
 
-            <FaEdit />
+            <button
+              onClick={() => onEdit(task)}
+              className="text-blue-600 transition hover:text-blue-800"
+              title="Edit Task"
+            >
+              <FaEdit />
+            </button>
 
-          </button>
+            <button
+              onClick={() => onDelete(task)}
+              className="text-red-600 transition hover:text-red-800"
+              title="Delete Task"
+            >
+              <FaTrash />
+            </button>
 
-          <button
-            onClick={() => onDelete(task)}
-            className="text-red-600 hover:text-red-800"
-          >
-
-            <FaTrash />
-
-          </button>
-
-        </div>
+          </div>
+        )}
 
       </div>
 

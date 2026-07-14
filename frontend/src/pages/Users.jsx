@@ -12,6 +12,7 @@ import {
 import UserTable from "../components/user/UserTable";
 import UserModal from "../components/user/UserModal";
 import DeleteUserModal from "../components/user/DeleteUserModal";
+import LoadingSpinner from "../components/common/LoadingSpinner";
 
 function Users() {
   const [users, setUsers] = useState([]);
@@ -93,7 +94,7 @@ function Users() {
   if (loading) {
     return (
       <div className="mt-20 text-center text-lg">
-        Loading Users...
+        <LoadingSpinner text="Loading..." />
       </div>
     );
   }

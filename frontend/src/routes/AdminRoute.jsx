@@ -2,12 +2,12 @@ import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import LoadingSpinner from "../components/common/LoadingSpinner";
 
-function ProtectedRoute() {
+function AdminRoute() {
   const { user, loading } = useAuth();
 
   if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center text-lg font-semibold">
+      <div className="flex h-screen items-center justify-center">
         <LoadingSpinner text="Loading..." />
       </div>
     );
@@ -17,7 +17,11 @@ function ProtectedRoute() {
     return <Navigate to="/login" replace />;
   }
 
+  if (user.role?.name !== "ADMIN") {
+    return <Navigate to="/" replace />;
+  }
+
   return <Outlet />;
 }
 
-export default ProtectedRoute;
+export default AdminRoute;

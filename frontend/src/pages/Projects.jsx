@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import ProjectModal from "../components/project/ProjectModal";
 import DeleteProjectModal from "../components/project/DeleteProjectModal";
 import { deleteProject } from "../services/project.service";
+import LoadingSpinner from "../components/common/LoadingSpinner";
 
 function Projects() {
   const { user } = useAuth();
@@ -56,7 +57,7 @@ function Projects() {
   if (loading) {
     return (
       <div className="text-center mt-20 text-xl">
-        Loading Projects...
+        <LoadingSpinner text="Loading..." />
       </div>
     );
   }

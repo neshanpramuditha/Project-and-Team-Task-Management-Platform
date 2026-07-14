@@ -31,11 +31,13 @@ export const getUserById = async (id) => {
   }
 
   const { password, ...userWithoutPassword } = user;
+
   return userWithoutPassword;
 };
 
 // Create new user
 export const createUser = async (data) => {
+  // Email already exists?
   const existingUser = await prisma.user.findUnique({
     where: {
       email: data.email,
@@ -46,6 +48,7 @@ export const createUser = async (data) => {
     throw new Error("Email already exists");
   }
 
+  // Find role
   const role = await prisma.role.findUnique({
     where: {
       name: data.role,
@@ -54,6 +57,11 @@ export const createUser = async (data) => {
 
   if (!role) {
     throw new Error("Invalid role");
+  }
+
+  // Password required
+  if (!data.password || data.password.trim() === "") {
+    throw new Error("Password is required");
   }
 
   const hashedPassword = await bcrypt.hash(data.password, 10);
@@ -76,6 +84,7 @@ export const createUser = async (data) => {
   return userWithoutPassword;
 };
 
+
 // Update user
 export const updateUser = async (id, data) => {
   const existingUser = await prisma.user.findUnique({
@@ -88,37 +97,47 @@ export const updateUser = async (id, data) => {
     throw new Error("User not found");
   }
 
-  // Hash password only if provided
-  if (data.password) {
-    data.password = await bcrypt.hash(data.password, 10);
-  }
-
+  // Convert role name -> roleId
   if (data.role) {
-  const role = await prisma.role.findUnique({
-    where: {
-      name: data.role,
-    },
-  });
+    const role = await prisma.role.findUnique({
+      where: {
+        name: data.role,
+      },
+    });
 
-  if (!role) {
-    throw new Error("Invalid role");
+    if (!role) {
+      throw new Error("Invalid role");
+    }
+
+    data.roleId = role.id;
+    delete data.role;
   }
 
-  data.roleId = role.id;
-  delete data.role;
-}
+  // Update password ONLY if user entered one
+  if (data.password && data.password.trim() !== "") {
+    data.password = await bcrypt.hash(data.password, 10);
+  } else {
+    delete data.password;
+  }
 
-  const user = await prisma.user.update({
+  const updatedUser = await prisma.user.update({
     where: {
       id: Number(id),
     },
-    data,
+    data: {
+      firstName: data.firstName,
+      lastName: data.lastName,
+      email: data.email,
+      roleId: data.roleId,
+      ...(data.password && { password: data.password }),
+    },
     include: {
       role: true,
     },
   });
 
-  const { password, ...userWithoutPassword } = user;
+  const { password, ...userWithoutPassword } = updatedUser;
+
   return userWithoutPassword;
 };
 

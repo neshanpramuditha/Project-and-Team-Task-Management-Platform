@@ -13,35 +13,65 @@ function Sidebar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
-  // Get role name safely
   const role = user?.role?.name ?? "";
 
-  const menus = [
-    {
-      name: "Dashboard",
-      icon: FaHome,
-      path: "/",
-    },
-    {
-      name: "Projects",
-      icon: FaProjectDiagram,
-      path: "/projects",
-    },
-    {
-      name: "Tasks",
-      icon: FaTasks,
-      path: "/tasks",
-    },
-  ];
+  const menus = {
+    ADMIN: [
+      {
+        name: "Dashboard",
+        icon: FaHome,
+        path: "/",
+      },
+      {
+        name: "Projects",
+        icon: FaProjectDiagram,
+        path: "/projects",
+      },
+      {
+        name: "Tasks",
+        icon: FaTasks,
+        path: "/tasks",
+      },
+      {
+        name: "Users",
+        icon: FaUsers,
+        path: "/users",
+      },
+    ],
 
-  // Admin only menu
-  if (role === "ADMIN") {
-    menus.push({
-      name: "Users",
-      icon: FaUsers,
-      path: "/users",
-    });
-  }
+    PROJECT_MANAGER: [
+      {
+        name: "Dashboard",
+        icon: FaHome,
+        path: "/",
+      },
+      {
+        name: "Projects",
+        icon: FaProjectDiagram,
+        path: "/projects",
+      },
+      {
+        name: "Tasks",
+        icon: FaTasks,
+        path: "/tasks",
+      },
+    ],
+
+    TEAM_MEMBER: [
+      {
+        name: "Dashboard",
+        icon: FaHome,
+        path: "/",
+      },
+      {
+        name: "Tasks",
+        icon: FaTasks,
+        path: "/tasks",
+      },
+    ],
+  };
+
+  const menuItems = menus[role] || [];
 
   function handleLogout() {
     logout();
@@ -51,7 +81,8 @@ function Sidebar() {
   return (
     <aside className="sticky top-0 flex h-screen w-64 flex-col bg-slate-900 text-white shadow-xl">
 
-      {/* Logo */}
+      {/* Logo & User */}
+
       <div className="border-b border-slate-800 p-6">
 
         <h1 className="text-2xl font-bold text-blue-500">
@@ -75,11 +106,12 @@ function Sidebar() {
       </div>
 
       {/* Navigation */}
+
       <nav className="mt-4 flex-1">
 
-        {menus.map((item) => (
+        {menuItems.map((item) => (
           <NavLink
-            key={item.name}
+            key={item.path}
             to={item.path}
             className={({ isActive }) =>
               `mx-3 mb-2 flex items-center gap-4 rounded-lg px-4 py-3 transition-all duration-200 ${
@@ -97,6 +129,7 @@ function Sidebar() {
       </nav>
 
       {/* Logout */}
+
       <div className="border-t border-slate-800 p-4">
 
         <button

@@ -7,11 +7,21 @@ function UserTable({
 }) {
   if (users.length === 0) {
     return (
-      <div className="rounded-xl bg-white p-10 text-center shadow">
-        <p className="text-gray-500">
-          No users found.
-        </p>
-      </div>
+      <div className="rounded-2xl border-2 border-dashed border-gray-300 bg-white py-20 text-center">
+
+  <div className="text-6xl">
+    👥
+  </div>
+
+  <h2 className="mt-4 text-2xl font-bold">
+    No Users Found
+  </h2>
+
+  <p className="mt-2 text-gray-500">
+    Create your first team member.
+  </p>
+
+</div>
     );
   }
 
