@@ -160,7 +160,7 @@ function Tasks() {
               setSelectedTask(null);
               setShowModal(true);
             }}
-            className="flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-3 text-white transition hover:bg-blue-700"
+            className="flex items-center justify-center gap-2 rounded-xl bg-[#FF6B4A] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#F0562F] focus:outline-none focus:ring-4 focus:ring-[#FF6B4A]/25"
           >
             <FaPlus />
             New Task

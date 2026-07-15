@@ -93,24 +93,35 @@ function Users() {
 
   if (loading) {
     return (
-      <div className="mt-20 text-center text-lg">
+      <div className="syncro-users flex min-h-[60vh] items-center justify-center">
+        <style>{`
+            @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap');
+            .syncro-users { font-family: 'Inter', sans-serif; }
+            .syncro-users h1 { font-family: 'Space Grotesk', sans-serif; }
+        `}</style>
         <LoadingSpinner text="Loading..." />
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
+    <div className="syncro-users space-y-6">
 
-      <div className="flex items-center justify-between">
+      <style>{`
+          @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap');
+          .syncro-users { font-family: 'Inter', sans-serif; }
+          .syncro-users h1 { font-family: 'Space Grotesk', sans-serif; }
+      `}</style>
+
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 
         <div>
 
-          <h1 className="text-4xl font-bold">
+          <h1 className="text-3xl font-semibold text-[#12141C]">
             Users
           </h1>
 
-          <p className="mt-2 text-gray-500">
+          <p className="mt-1.5 text-sm text-[#6B7280]">
             Manage system users
           </p>
 
@@ -121,20 +132,22 @@ function Users() {
             setSelectedUser(null);
             setShowModal(true);
           }}
-          className="flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-3 text-white hover:bg-blue-700"
+          className="flex items-center justify-center gap-2 rounded-xl bg-[#FF6B4A] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#F0562F] focus:outline-none focus:ring-4 focus:ring-[#FF6B4A]/25"
         >
-          <FaPlus />
+          <FaPlus className="text-xs" />
 
           New User
         </button>
 
       </div>
 
-      <UserTable
-        users={users}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-      />
+      <div className="rounded-2xl border border-[#E5E7EB] bg-white p-2 shadow-sm sm:p-4">
+        <UserTable
+          users={users}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+        />
+      </div>
 
       <UserModal
         isOpen={showModal}
