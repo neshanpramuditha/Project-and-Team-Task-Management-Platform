@@ -1,4 +1,4 @@
-# 🚀 TaskFlow – Project & Team Task Management Platform
+# SYNCRO - Project & Team Task Management Platform 🧩
 
 A full-stack Project and Team Task Management Platform developed as part of the CyphLab Intern Full Stack Developer practical assignment.
 
@@ -162,7 +162,7 @@ backend/
 ## Clone Repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/taskflow.git
+git clone https://github.com/neshanpramuditha/Project-and-Team-Task-Management-Platform.git
 ```
 
 ---
@@ -275,31 +275,16 @@ Dashboard
 GET /api/dashboard
 ```
 
----
-
-# 📷 Screenshots
-
-(Add screenshots here)
-
-- Login
-- Dashboard
-- Projects
-- Tasks
-- Kanban
-- Users
-
----
-
 # 🤖 AI Assistance
 
 AI tools used:
 
-- ChatGPT (OpenAI)
+- ChatGPT 
+- Claude
 
 AI assisted with:
 
 - UI improvements
-- React component generation
 - Bug fixing
 - Code refactoring
 - Documentation
@@ -313,10 +298,9 @@ All development decisions, testing, debugging, and final implementation were com
 
 Developed by
 
-**Deshan Premarathna**
+*Neshan Pramuditha Premarathna**
 
 University of Kelaniya
-
 BICT (Hons) in Software Development
 
 ---
