@@ -201,6 +201,21 @@ npm run dev
 ```
 
 ---
+## Environment Variables
+
+Copy the example environment files before running the project.
+
+Backend
+
+```bash
+cp .env.example .env
+```
+
+Frontend
+
+```bash
+cp .env.example .env
+```
 
 # 🔐 Default Roles
 
